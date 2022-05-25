@@ -1,32 +1,37 @@
 class Solution {
 public:
-    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
-        int n=nums.size();
-        int logn[n+5];
-        logn[1]=0;
+    int table[22][100050],logs[100050];
+    void build(vector<int>&v, int n){
+        logs[1]=0;
         for(int i=2; i<=n; i++){
-            logn[i]=logn[i/2]+1;
+            logs[i]=logs[i/2]+1;
         }
-        int table[32][n+5];
-        for(int i=0; i<=logn[n]; i++){
-            int curr_len=1<<i;
-            for(int j=0; (j+curr_len)<=n; j++){
-                if(curr_len==1){
-                    table[i][j]=nums[j];
+        for(int i=0; i<=logs[n]; i++){
+            int currLen=1<<i;
+            for(int j=0; (j+currLen)<=n; j++){
+                if(currLen==1){
+                    table[i][j]=v[j];
                 }
                 else{
-                    table[i][j]=max(table[i-1][j], table[i-1][j+(curr_len/2)]);
+                    table[i][j]=max(table[i-1][j],table[i-1][j+currLen/2]);
                 }
             }
         }
-        vector<int>ans;
+    }
+    
+    int getMax(int L, int R){
+        int p=logs[R-L+1];
+        int pLen=1<<p;
+        return max(table[p][L],table[p][R-pLen+1]);
+    }
+    
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        int n=nums.size();
+        build(nums,n);
+        vector<int>res;
         for(int i=0; i<=(n-k); i++){
-            int L=i,R=i+(k-1);
-            int p=logn[R-L+1];
-            int len=1<<p;
-            int res=max(table[p][L],table[p][R-len+1]);
-            ans.push_back(res);
+            res.push_back(getMax(i,i+k-1));
         }
-        return ans;
+        return res;
     }
 };
