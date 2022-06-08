@@ -1,22 +1,27 @@
 class Solution {
 public:
-    int maxProfit(vector<int>& nums) {
-        int n=nums.size(),Min=1e9,Max=0;
-        vector<int>right(n),left(n);
-        for(int i=0; i<n; i++){
-        	Min=min(Min,nums[i]);
-        	right[i]=Min;
+    int dp[100010][2];
+    int solve(int idx, int n, vector<int>& v, int status){
+        if(idx>=n){
+            return 0;
         }
-        for(int i=n-1; i>=0; i--){
-        	Max=max(Max,nums[i]);
-        	left[i]=Max;
+        if(dp[idx][status]!=-1){
+            return dp[idx][status];
         }
-        int res=0;
-        for(int i=0; i<n; i++){
-        	if(right[i]<left[i]){
-        		res=max(res,left[i]-right[i]);
-        	}
+        int profit;
+        if(status){
+            profit=max(solve(idx+1, n, v, 1), v[idx]);
         }
-        return res;
+        else{
+            int profit1=solve(idx+1, n, v, 1)-v[idx];
+            int profit2=solve(idx+1, n, v, 0);
+            profit=max(profit1, profit2);
+        }
+        return dp[idx][status]=profit;
+    }
+    int maxProfit(vector<int>& prices) {
+        int n=prices.size();
+        memset(dp, -1, sizeof(dp));
+        return solve(0, n, prices, 0);
     }
 };
