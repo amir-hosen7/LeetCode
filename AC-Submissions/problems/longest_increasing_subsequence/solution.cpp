@@ -1,25 +1,17 @@
 class Solution {
 public:
-    int dp[2510];
-    int lis(int idx, vector<int>& A, int n){
-        if(dp[idx]!=-1){
-            return dp[idx];
-        }
-        int ans=0;
-        for(int i=idx+1; i<n; i++){
-            if(A[i]>A[idx]){
-                ans=max(ans, lis(i,A,n));
-            }
-        }
-        return dp[idx]=ans+1;
-    }
     int lengthOfLIS(vector<int>& nums) {
         int n=nums.size();
-        memset(dp,-1,sizeof(dp));
-        int ans=0;
+        vector<int>lis;
         for(int i=0; i<n; i++){
-            ans=max(ans, lis(i,nums,n));
+            int idx=lower_bound(lis.begin(), lis.end(), nums[i]) - lis.begin();
+            if(idx==lis.size()){
+                lis.push_back(nums[i]);
+            }
+            else{
+                lis[idx]=nums[i];
+            }
         }
-        return ans;
+        return lis.size();
     }
 };
