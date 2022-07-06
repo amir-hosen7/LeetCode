@@ -1,6 +1,6 @@
 class Solution {
 public:
-    int dp[50];
+    int dp[31];
     int solve(int n) {
         if(n==0){return 0;}
         if(n==1){return 1;}
