@@ -8,40 +8,35 @@
  *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
+
+
 class Solution {
 public:
-    bool isPalindrome(ListNode* root) {
-        int totalNode=1,mid;
-        ListNode *currNode=root;
-        while(currNode->next!=NULL){
-            totalNode++;
+    bool isPalindrome(ListNode* head) {
+        int tot=0;
+        ListNode* currNode=head;
+        while(currNode!=NULL){
+            tot++;
             currNode=currNode->next;
         }
-        if(totalNode==1){
-            return true;
-        }
-        mid=totalNode/2;
-        int cnt=0;
-        currNode=root;
-        ListNode *prev=NULL,*temp;
-        while(1){
-            cnt++;
-            temp=currNode;
+        int mid=tot/2;
+        currNode=head;
+        ListNode* prev=NULL;
+        while(mid){
+            ListNode* temp=currNode;
             currNode=currNode->next;
             temp->next=prev;
             prev=temp;
-            if(cnt==mid){break;}
+            mid--;
         }
-        if(totalNode%2==1){
-            currNode=currNode->next;
-        }
-        while(mid--){
-            if(temp->val!=currNode->val){
-                return false;
-            }
-            temp=temp->next;
+        if(tot%2) currNode=currNode->next;
+        while(prev!=NULL){
+            if(prev->val!=currNode->val) return false;
+            prev=prev->next;
             currNode=currNode->next;
         }
         return true;
     }
 };
+
+
